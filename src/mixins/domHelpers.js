@@ -48,17 +48,19 @@ module.exports = {
    * if target element should be positioning above the base element.
    */
   positionDropdown(baseElement, targetElement, aboveCssClass = 'above') {
-    const offset = this.getOffset(baseElement)
+    const offset = baseElement && this.getOffset(baseElement)
 
-    targetElement.style.minWidth = `${baseElement.offsetWidth}px`
-    targetElement.style.left = `${offset.left}px`
+    if (baseElement && targetElement) {
+      targetElement.style.minWidth = `${baseElement.offsetWidth}px`
+      targetElement.style.left = `${offset.left}px`
 
-    if (offset.maxHeight < targetElement.offsetHeight) {
-      targetElement.style.top = `${offset.top - targetElement.offsetHeight + 1}px`
-      targetElement.classList.add(aboveCssClass)
-    } else {
-      targetElement.style.top = `${offset.top + baseElement.offsetHeight - 1}px`
-      targetElement.classList.remove(aboveCssClass)
+      if (offset.maxHeight < targetElement.offsetHeight) {
+        targetElement.style.top = `${offset.top - targetElement.offsetHeight + 1}px`
+        targetElement.classList.add(aboveCssClass)
+      } else {
+        targetElement.style.top = `${offset.top + baseElement.offsetHeight - 1}px`
+        targetElement.classList.remove(aboveCssClass)
+      }
     }
   },
 

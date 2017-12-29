@@ -353,6 +353,25 @@
   import ajax from '../mixins/ajax'
   import domHelpers from '../mixins/domHelpers'
 
+  /**
+   * Check for two values are equal.
+   * @param {any} a
+   * @param {any} b
+   * @returns {boolean}
+   */
+  function isEqual(a, b) {
+    let eq = a === b
+
+    if (!eq && a && b && typeof a === 'object' && typeof b === 'object') {
+      eq = Object.keys(a).every((key) => {
+        return !a.hasOwnProperty(key) || typeof key === 'function' ||
+          key[0] === '_' || a[key] === b[key]
+      })
+    }
+
+    return eq
+  }
+
   export default {
     mixins: [pointerScroll, typeAheadPointer, ajax],
 
@@ -620,9 +639,14 @@
        */
       mutableValue(val, old) {
         if (this.multiple) {
-          if (this.onChange) this.onChange(val)
+          // check for first call to avoid change triggering on value initialization
+          if (this.onChange && this.initialized) {
+            this.onChange(val)
+          } else {
+            this.initialized = true
+          }
         } else {
-          if (this.onChange && val !== old) this.onChange(val)
+          if (this.onChange && !isEqual(val, old)) this.onChange(val)
         }
       },
 
