@@ -51,14 +51,28 @@ module.exports = {
     const offset = baseElement && this.getOffset(baseElement)
 
     if (baseElement && targetElement) {
+      const targetHeight = targetElement.offsetHeight
+      // move it to the body to avoid glitches in IE
+      document.body.appendChild(targetElement)
       targetElement.style.minWidth = `${baseElement.offsetWidth}px`
       targetElement.style.left = `${offset.left}px`
 
-      if (offset.maxHeight < targetElement.offsetHeight) {
-        targetElement.style.top = `${offset.top - targetElement.offsetHeight + 1}px`
+      if (offset.maxHeight < targetHeight && offset.top > targetHeight / 2) {
+        let top = offset.top - targetHeight + 1
+
+        if (top < 0) {
+          top = 0;
+          targetElement.style.maxHeight = `${offset.top}px`
+        }
+        targetElement.style.top = `${top}px`
+        baseElement.classList.add(aboveCssClass)
         targetElement.classList.add(aboveCssClass)
       } else {
+        if (offset.maxHeight < targetHeight) {
+          targetElement.style.maxHeight = `${offset.maxHeight}px`
+        }
         targetElement.style.top = `${offset.top + baseElement.offsetHeight - 1}px`
+        baseElement.classList.remove(aboveCssClass)
         targetElement.classList.remove(aboveCssClass)
       }
     }

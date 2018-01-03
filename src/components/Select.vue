@@ -20,7 +20,7 @@
     margin-right: 3px;
     margin-left: 1px;
   }
-  .v-select.rtl .dropdown-menu {
+  .v-select-dropdown-menu.rtl {
     text-align: right;
   }
   /* Open Indicator */
@@ -93,8 +93,15 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+  .v-select.open .dropdown-toggle.above {
+    border-top-color: transparent;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-color: rgba(60, 60, 60, .26);
+  }
   /* Dropdown Menu */
-  .v-select .dropdown-menu {
+  .v-select-dropdown-menu {
+    font-family: sans-serif;
     display: block;
     position: fixed;
     z-index: 1000;
@@ -112,9 +119,10 @@
     list-style: none;
     background: #fff;
   }
-  .v-select .dropdown-menu.above {
+  .v-select-dropdown-menu.above {
     border-top: 1px solid rgba(0, 0, 0, .26);
     border-bottom: none;
+    border-radius: 4px 4px 0 0;
     box-shadow: none;
   }
   .v-select .no-options {
@@ -195,24 +203,24 @@
     clear: none;
   }
   /* List Items */
-  .v-select li {
+  .v-select-dropdown-menu li {
     line-height: 1.42857143; /* Normalize line height */
   }
-  .v-select li > a {
+  .v-select-dropdown-menu li > a {
     display: block;
     padding: 3px 20px;
     clear: both;
     color: #333; /* Overrides most CSS frameworks */
     white-space: nowrap;
   }
-  .v-select li:hover {
+  .v-select-dropdown-menu li:hover {
     cursor: pointer;
   }
-  .v-select .dropdown-menu .active > a {
+  .v-select-dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
   }
-  .v-select .dropdown-menu > .highlight > a {
+  .v-select-dropdown-menu > .highlight > a {
     /*
      * required to override bootstrap 3's
      * .dropdown-menu > li > a:hover {} styles
@@ -220,7 +228,7 @@
     background: #5897fb;
     color: #fff;
   }
-  .v-select .highlight:not(:last-child) {
+  .v-select-dropdown-menu .highlight:not(:last-child) {
     margin-bottom: 0; /* Fixes Bulma Margin */
   }
   /* Loading Spinner */
@@ -331,9 +339,17 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
-        <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent="select(option)">
+      <ul ref="dropdownMenu"
+          v-if="dropdownOpen"
+          :class="['v-select-dropdown-menu', rtlClass]"
+          :style="{ 'max-height': maxHeight }"
+          @mousedown="onMouseDown"
+          @mouseup="onMouseUp">
+        <li v-for="(option, index) in filteredOptions"
+            v-bind:key="index"
+            :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }"
+            @mouseover="typeAheadPointer = index">
+          <a @mousedown.prevent.stop="select(option)">
           <slot name="option" v-bind="option">
             {{ getOptionLabel(option) }}
           </slot>
@@ -368,7 +384,6 @@
           key[0] === '_' || a[key] === b[key]
       })
     }
-
     return eq
   }
 
@@ -796,6 +811,7 @@
         if (this.clearSearchOnSelect) {
           this.search = ''
         }
+        this.mousedown = false
       },
 
       /**
@@ -846,6 +862,7 @@
        * @return {void}
        */
       onEscape () {
+        this.mousedown = false
         if (!this.search.length) {
           this.$refs.search.blur()
         } else {
@@ -859,11 +876,13 @@
        * @return {void}
        */
       onSearchBlur () {
-        if (this.clearSearchOnBlur) {
-          this.search = ''
+        if (!this.mousedown) {
+          if (this.clearSearchOnBlur) {
+            this.search = ''
+          }
+          this.open = false
+          this.$emit('search:blur')
         }
-        this.open = false
-        this.$emit('search:blur')
       },
 
       /**
@@ -872,12 +891,16 @@
        * @return {void}
        */
       onSearchFocus () {
-        this.open = true
-        this.$emit('search:focus')
+        if (this.mousedown) {
+          this.mousedown = false
+        } else {
+          this.open = true
+          this.$emit('search:focus')
 
-        this.$nextTick(() => {
-          domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
-        })
+          this.$nextTick(() => {
+            domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
+          })
+        }
       },
 
       /**
@@ -931,6 +954,27 @@
         if (this.pushTags) {
           this.mutableOptions.push(option)
         }
+      },
+
+      /**
+       * Event-Handler to help workaround IE11
+       * firing a `blur` event when clicking
+       * the dropdown's scrollbar, causing it
+       * to collapse abruptly.
+       * @return {void}
+       */
+      onMouseDown () {
+        this.mousedown = true
+      },
+
+      /**
+       * Workaround for IE11.
+       * Set search input focus back if mouse up on scrollbar.
+       */
+      onMouseUp () {
+        if (this.mousedown) {
+          this.$refs.search.focus()
+        }
       }
     },
 
@@ -951,6 +995,14 @@
           rtl: this.dir === 'rtl',
           disabled: this.disabled
         }
+      },
+
+      /**
+       * Class for dropdown menu if dir set to 'rtl'
+       * @return {string}
+       */
+      rtlClass () {
+        return this.dir === 'rtl' ? 'rtl' : ''
       },
 
       /**
