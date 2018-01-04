@@ -972,8 +972,10 @@
        * Set search input focus back if mouse up on scrollbar.
        */
       onMouseUp () {
-        if (this.mousedown) {
+        if (this.mousedown && document.activeElement !== this.$refs.search) {
           this.$refs.search.focus()
+        } else {
+          this.mousedown = false
         }
       }
     },
