@@ -761,7 +761,7 @@ describe('Select.vue', () => {
 
     it('will console.warn when options contain objects without a valid label key', (done) => {
       spyOn(console, 'warn')
-      const vm = new Vue({
+      new Vue({
         template: '<div><v-select :options="[{}]"></v-select></div>'
       }).$mount()
       Vue.nextTick(() => {

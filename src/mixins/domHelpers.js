@@ -15,7 +15,7 @@ module.exports = {
    * @param {HTMLElement} element - element to calculate offset for.
    * @returns {Offset} element offset object.
    */
-  getOffset: function(element) {
+  getOffset: function (element) {
     let el = element.offsetParent
     let parentEl = element.parentElement
     let top = element.offsetTop
@@ -47,7 +47,7 @@ module.exports = {
    * @param {string}      [aboveCssClass='above'] CSS class to apply
    * if target element should be positioning above the base element.
    */
-  positionDropdown(baseElement, targetElement, aboveCssClass = 'above') {
+  positionDropdown (baseElement, targetElement, aboveCssClass = 'above') {
     const offset = baseElement && this.getOffset(baseElement)
 
     if (baseElement && targetElement) {
@@ -61,7 +61,7 @@ module.exports = {
         let top = offset.top - targetHeight + 1
 
         if (top < 0) {
-          top = 0;
+          top = 0
           targetElement.style.maxHeight = `${offset.top}px`
         }
         targetElement.style.top = `${top}px`
@@ -83,11 +83,11 @@ module.exports = {
    * @param {HTMLElement} targetElement.
    * @return {Array<HTMLElement>} array of scrollable DOM elements.
    */
-  getScrollableElements(targetElement) {
+  getScrollableElements (targetElement) {
     const elements = []
     let el = targetElement.parentElement
 
-    while (el && el.tagName !== "HTML") {
+    while (el && el.tagName !== 'HTML') {
       if (el.offsetHeight < el.scrollHeight) {
         elements.push(el)
       }

@@ -370,7 +370,7 @@
    * @param {any} b
    * @returns {boolean}
    */
-  function isEqual(a, b) {
+  function isEqual (a, b) {
     let eq = a === b
 
     if (!eq && a && b && typeof a === 'object' && typeof b === 'object') {
@@ -647,7 +647,7 @@
        * @param  {string|object} old
        * @return {void}
        */
-      mutableValue(val, old) {
+      mutableValue (val, old) {
         if (this.multiple) {
           // check for first call to avoid change triggering on value initialization
           if (this.onChange && this.initialized) {
@@ -707,7 +707,7 @@
     /**
      * Set on scroll listener.
      */
-    mounted() {
+    mounted () {
       const elements = domHelpers.getScrollableElements(this.$el)
 
       if (!this.scrollHandler && elements.length) {
@@ -734,7 +734,7 @@
      * Before destroy lifecycle event handler.
      * Remove scroll event handlers.
      */
-    beforeDestroy() {
+    beforeDestroy () {
       if (this.scrollHandler) {
         if (typeof window === 'object') {
           window.document.removeEventListener('scroll', this.scrollHandler)
