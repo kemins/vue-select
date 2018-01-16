@@ -251,7 +251,7 @@ describe('Select.vue', () => {
     describe('change Event', () => {
       it('will trigger the input event when the selection changes', (done) => {
         const vm = new Vue({
-          template: `<div><v-select ref="select"  :value="['foo']" :options="['foo','bar','baz']" v-on:input="foo = arguments[0]"></v-select></div>`,
+          template: `<div><v-select ref="select" :value="['foo']" :options="['foo','bar','baz']" v-on:input="foo = arguments[0]"></v-select></div>`,
           data: {
             foo: ''
           }
@@ -273,11 +273,12 @@ describe('Select.vue', () => {
           }
         }).$mount()
 
-        vm.$refs.select.select('bar')
-
         Vue.nextTick(() => {
-          expect(vm.foo).toEqual(['foo', 'bar'])
-          done()
+          vm.$refs.select.select('bar')
+          Vue.nextTick(() => {
+            expect(vm.foo).toEqual(['foo', 'bar'])
+            done()
+          })
         })
       })
     })

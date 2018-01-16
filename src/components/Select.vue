@@ -205,22 +205,18 @@
   /* List Items */
   .v-select-dropdown-menu li {
     line-height: 1.42857143; /* Normalize line height */
-  }
-  .v-select-dropdown-menu li > a {
+    cursor: pointer;
     display: block;
     padding: 3px 20px;
     clear: both;
     color: #333; /* Overrides most CSS frameworks */
     white-space: nowrap;
   }
-  .v-select-dropdown-menu li:hover {
-    cursor: pointer;
-  }
-  .v-select-dropdown-menu .active > a {
+  .v-select-dropdown-menu .active {
     color: #333;
     background: rgba(50, 50, 50, .1);
   }
-  .v-select-dropdown-menu > .highlight > a {
+  .v-select-dropdown-menu > .highlight {
     /*
      * required to override bootstrap 3's
      * .dropdown-menu > li > a:hover {} styles
@@ -348,12 +344,11 @@
         <li v-for="(option, index) in filteredOptions"
             v-bind:key="index"
             :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }"
-            @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent.stop="select(option)">
+            @mouseover="typeAheadPointer = index"
+            @mousedown.prevent.stop="select(option)">
           <slot name="option" v-bind="option">
             {{ getOptionLabel(option) }}
           </slot>
-          </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
           <slot name="no-options">Sorry, no matching options.</slot>

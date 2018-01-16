@@ -1,3 +1,8 @@
+## 2.4.3
+
+- Removed link tag from dropdown list item element.
+- Fix unit tests.
+
 ## 2.4.2
 
 - Fixed dropdown for IE11.
