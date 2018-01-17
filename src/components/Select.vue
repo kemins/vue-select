@@ -109,7 +109,7 @@
     padding: 5px 0;
     margin: 0;
     width: auto;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid rgba(0, 0, 0, .26);
     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .15);
     border-top: none;
