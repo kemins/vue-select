@@ -1,3 +1,7 @@
+## 2.4.5
+
+- Fixed dropdown menu after scrolling.
+
 ## 2.4.4
 
 - Added search:clear event.

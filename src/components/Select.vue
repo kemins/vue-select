@@ -103,7 +103,7 @@
   .v-select-dropdown-menu {
     font-family: sans-serif;
     display: block;
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     min-width: 160px;
     padding: 5px 0;
@@ -715,6 +715,8 @@
           if (this.open) {
             // on scroll close the dropdown
             this.open = false
+            this.$refs.search.blur()
+            this.mousedown = false
           }
         }
         if (typeof window === 'object') {
