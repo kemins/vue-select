@@ -103,7 +103,7 @@
   .v-select-dropdown-menu {
     font-family: sans-serif;
     display: block;
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     min-width: 160px;
     padding: 5px 0;
@@ -679,6 +679,7 @@
         if (!this.taggable && this.resetOnOptionsChange) {
           this.mutableValue = this.multiple ? [] : null
         }
+        this.positionDropdown()
       },
 
       /**
@@ -882,6 +883,12 @@
         }
       },
 
+      positionDropdown () {
+        this.$nextTick(() => {
+          domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
+        })
+      },
+
       /**
        * Open the dropdown on focus.
        * @emits  {search:focus}
@@ -894,9 +901,7 @@
           this.open = true
           this.$emit('search:focus')
 
-          this.$nextTick(() => {
-            domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
-          })
+          this.positionDropdown()
         }
       },
 

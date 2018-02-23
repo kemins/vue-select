@@ -1,3 +1,7 @@
+## 2.4.6
+
+- Fixed dropdown menu - refresh it position on the options list changed.
+
 ## 2.4.5
 
 - Fixed dropdown menu after scrolling.
