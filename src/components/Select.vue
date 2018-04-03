@@ -885,7 +885,9 @@
 
       positionDropdown () {
         this.$nextTick(() => {
-          domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
+          if (this.dropdownOpen) {
+            domHelpers.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
+          }
         })
       },
 
