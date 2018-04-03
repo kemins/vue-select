@@ -1,3 +1,7 @@
+## 2.4.7
+
+- Added extra check to avoid positioning dropdown when it's not shown.
+
 ## 2.4.6
 
 - Fixed dropdown menu - refresh it position on the options list changed.
