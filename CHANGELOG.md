@@ -1,3 +1,7 @@
+## 2.4.8
+
+- Added option "noRemove" to prevent removing existing values in the multiple mode.
+
 ## 2.4.7
 
 - Added extra check to avoid positioning dropdown when it's not shown.
