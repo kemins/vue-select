@@ -711,7 +711,7 @@
     mounted () {
       const elements = domHelpers.getScrollableElements(this.$el)
 
-      if (!this.scrollHandler && elements.length) {
+      if (!this.noDrop && !this.scrollHandler && elements.length) {
         this.scrollHandler = () => {
           if (this.open) {
             // on scroll close the dropdown
