@@ -46,10 +46,12 @@ module.exports = {
      * @return {void}
      */
     typeAheadSelect () {
-      if (this.filteredOptions[ this.typeAheadPointer ]) {
-        this.select(this.filteredOptions[this.typeAheadPointer])
-      } else if (this.taggable && this.search.length) {
-        this.select(this.search)
+      if (!this.noDrop) {
+        if (this.filteredOptions[ this.typeAheadPointer ]) {
+          this.select(this.filteredOptions[this.typeAheadPointer])
+        } else if (this.taggable && this.search.length) {
+          this.select(this.search)
+        }
       }
 
       if (this.clearSearchOnSelect) {
