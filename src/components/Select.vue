@@ -300,7 +300,7 @@
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
         </slot>
-        <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
+        <button v-if="canOptionBeDeselected(option)" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
           <span aria-hidden="true">&times;</span>
         </button>
       </span>
@@ -601,6 +601,15 @@
       },
 
       /**
+       * Disable remove existing values in multi-mode
+       * @type {Boolean}
+       */
+      noRemove: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * Sets the id of the input element.
        * @type {String}
        * @default {null}
@@ -701,6 +710,10 @@
       this.mutableValue = this.value
       this.mutableOptions = this.options.slice(0)
       this.mutableLoading = this.loading
+      if (this.multiple) {
+        this.originalValue = Array.isArray(this.value) ?
+          this.value.slice(0) : [];
+      }
 
       this.$on('option:created', this.maybePushTag)
     },
@@ -776,6 +789,23 @@
       },
 
       /**
+       * Check for deselecting possibility.
+       * @param {Object|String} option
+       * @return {Boolean}
+       */
+      canOptionBeDeselected (option) {
+        let canBe = this.multiple
+
+        if (canBe && this.noRemove && Array.isArray(this.originalValue)) {
+          canBe = this.originalValue.every((val) => {
+            return typeof val === 'object' ? val[this.label] !== option[this.label] : val !== option
+          })
+        }
+
+        return canBe;
+      },
+
+      /**
        * De-select a given option.
        * @param  {Object|String} option
        * @return {void}
@@ -819,7 +849,7 @@
        */
       toggleDropdown (e) {
         if (e.target === this.$refs.openIndicator || e.target === this.$refs.search ||
-            e.target === this.$refs.toggle || e.target === this.$el) {
+          e.target === this.$refs.toggle || e.target === this.$el) {
           if (this.open) {
             this.$refs.search.blur() // dropdown will close on blur
           } else {
@@ -917,7 +947,9 @@
 
         if (!this.$refs.search.value.length && this.mutableValue) {
           if (this.multiple) {
-            value = this.mutableValue.pop()
+            if (!this.noRemove || this.mutableValue.length > this.originalValue.length) {
+              value = this.mutableValue.pop()
+            }
           } else {
             value = this.mutableValue = null
           }
