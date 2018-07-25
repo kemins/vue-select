@@ -1,3 +1,9 @@
+## 2.4.7
+
+- Fixed focus losing on search term
+- Fixed selecting by enter key if 'nodrop' set to true
+- Fixed interaction with search term through mouse
+
 ## 2.4.6
 
 - Fixed dropdown menu - refresh it position on the options list changed.
